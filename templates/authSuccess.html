@@ -1,0 +1,24 @@
+﻿{% extends 'base.html' %}
+{% block middle %}
+    <div id="container">
+
+        <div class="content_mid">
+            <dl class="c_section c_section_mid">
+                <dt>
+                    <h2><em></em>申请公司认证</h2>
+                </dt>
+                <dd class="c_certify">
+                    <h4>公司认证已提交，请等待审核</h4>
+
+                    <div class="breakdotted"></div>
+                    <a class="greenlink" href="create.html">发布新职位</a>
+                </dd>
+            </dl>
+        </div>
+
+        <div class="clear"></div>
+        <input type="hidden" value="" id="resubmitToken">
+        <a rel="nofollow" title="回到顶部" id="backtop" style="display: none;"></a>
+    </div><!-- end #container -->
+    </div><!-- end #body -->
+{% endblock %}

@@ -1,0 +1,622 @@
+﻿{% extends 'base.html' %}
+{% block middle %}
+    <div id="container">
+        <div class="sidebar">
+            {% for a in info %}
+            {% if forloop.counter == 1%}
+            <div id="options" class="greybg">
+                <dl>
+                    <dt>月薪范围 <em></em></dt>
+                    <dd>
+                    {% for i in listpay %}
+                        <div>
+                            <a href="{% url 'app:shailist' i 0 0 0 0%}">
+                                {% if i == 0 %}
+                                    {{ '2k以下' }}
+                                {% elif i == 1 %}
+                                    {{ '2k-5k' }}
+                                {% elif i == 2 %}
+                                    {{ '5k-10k' }}
+                                {% elif i == 3 %}
+                                    {{ '10k-15k' }}
+                                {% elif i == 4 %}
+                                    {{ '15k-25k' }}
+                                {% elif i == 5 %}
+                                    {{ '25k-50k' }}
+                                {% else %}
+                                    {{ '50k以上' }}
+                                {% endif %}
+                            </a>
+                        </div>
+                    {% endfor %}
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>工作经验 <em></em></dt>
+                    {% for i in listexp %}
+                    <dd>
+                        <div><a href="{% url 'app:shailist' 0 i 0 0 0  %}">
+                            {% if i == 0 %}
+                                {{ '不限' }}
+                            {% elif i == 1 %}
+                                {{ '应届毕业生' }}
+                            {% elif i == 2 %}
+                                {{ '1年以下' }}
+                            {% elif i == 3 %}
+                                {{ '1-3年' }}
+                            {% elif i == 4 %}
+                                {{ '3-5年' }}
+                            {% elif i == 5 %}
+                                {{ '5-10年' }}
+                            {% else %}
+                                {{ '10年以上' }}
+                            {% endif %}
+                        </a></div>
+                    </dd>
+                    {% endfor %}
+                </dl>
+                <dl>
+                    <dt>最低学历 <em></em></dt>
+                    {% for i in listdegree %}
+                    <dd>
+                        <div><a href="{% url 'app:shailist' 0 0 i 0 0 %}">
+                            {% if i == 0 %}
+                                {{ '不限' }}
+                            {% elif i == 1 %}
+                                {{ '大专' }}
+                            {% elif i == 2 %}
+                                {{ '本科' }}
+                            {% elif i == 3 %}
+                                {{ '硕士' }}
+                            {% else %}
+                                {{ '博士' }}
+                            {% endif %}
+                        </a></div>
+                    </dd>
+                    {% endfor %}
+                </dl>
+                <dl>
+                    <dt>工作性质 <em></em></dt>
+                    {% for i in listtype %}
+                    <dd>
+                        <div><a href="{% url 'app:shailist' 0 0 0 i 0 %}">
+                            {% if i == 0 %}
+                                {{ '不限' }}
+                            {% elif i == 1 %}
+                                {{ '兼职' }}
+                            {% elif i == 2 %}
+                                {{ '实习' }}
+                            {% endif %}
+                        </a></div>
+                    </dd>
+                    {% endfor %}
+                </dl>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="content">
+            <div id="search_box">
+                <form id="searchForm" name="searchForm" action="{% url 'app:list' %}" method="post">
+                    {% csrf_token %}
+                    <ul id="searchType">
+                        <li data-searchtype="1" class="type_selected">职位</li>
+                    </ul>
+                    <div class="searchtype_arrow"></div>
+                    <input type="text" id="search_input" name="kd" tabindex="1" value="" placeholder="请输入职位名称，如：产品经理"/>
+                    <input type="submit" id="search_button" value="搜索"/>
+                </form>
+            </div>
+            <style>
+                .ui-autocomplete {
+                    width: 488px;
+                    background: #fafafa !important;
+                    position: relative;
+                    z-index: 10;
+                    border: 2px solid #91cebe;
+                }
+
+                .ui-autocomplete-category {
+                    font-size: 16px;
+                    color: #999;
+                    width: 50px;
+                    position: absolute;
+                    z-index: 11;
+                    right: 0px; /*top: 6px; */
+                    text-align: center;
+                    border-top: 1px dashed #e5e5e5;
+                    padding: 5px 0;
+                }
+
+                .ui-menu-item {
+                    *width: 439px;
+                    vertical-align: middle;
+                    position: relative;
+                    margin: 0px;
+                    margin-right: 50px !important;
+                    background: #fff;
+                    border-right: 1px dashed #ededed;
+                }
+
+                .ui-menu-item a {
+                    display: block;
+                    overflow: hidden;
+                }
+            </style>
+            <script type="text/javascript" src="style/js/search.min.js"></script>
+            <dl class="hotSearch">
+                <dt>热门搜索：</dt>
+                {% for three in pothreehot %}
+                <dd><a href="list.htmlJava?labelWords=label&city=全国">{{ three.pname }}</a></dd>
+                {% endfor %}
+            </dl>
+            <div class="breakline"></div>
+            <dl class="workplace" id="workplaceSelect">
+                <dt class="fl">工作地点：</dt>
+                <dd>
+                    <a href="{% url 'app:shailist' 0 0 0 0 0 %}" class="current">全国</a>
+                    |
+                </dd>
+                <dd>
+                    <a href="{% url 'app:shailist' 0 0 0 0 1 %}">北京</a>
+                    |
+                </dd>
+                <dd>
+                    <a href="{% url 'app:shailist' 0 0 0 0 2 %}">上海</a>
+                    |
+                </dd>
+                <dd>
+                    <a href="{% url 'app:shailist' 0 0 0 0 3 %}">广州</a>
+                    |
+                </dd>
+                <dd>
+                    <a href="{% url 'app:shailist' 0 0 0 0 4 %}">深圳</a>
+                    |
+                </dd>
+                <dd>
+                    <a href="{% url 'app:shailist' 0 0 0 0 5 %}">成都</a>
+                    |
+                </dd>
+                <dd>
+                    <a href="{% url 'app:shailist' 0 0 0 0 6 %}">杭州</a>
+                    |
+                </dd>
+                <dd>
+                    <a href="{% url 'app:shailist' 0 0 0 0 7 %}">武汉</a>
+                    |
+                </dd>
+                <dd>
+                    <a href="{% url 'app:shailist' 0 0 0 0 8 %}">南京</a>
+                    |
+                </dd>
+                <dd class="more">
+                    <a href="javascript:;">其他</a>
+                    <div class="triangle citymore_arrow"></div>
+                </dd>
+                <dd id="box_expectCity" class="searchlist_expectCity dn">
+                    <span class="bot"></span>
+                    <span class="top"></span>
+                    <dl>
+                        <dt>ABCDEF</dt>
+                        <dd>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 1 %}">北京</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 9 %}">长春</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 5 %}">成都</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 10 %}">重庆</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 11 %}">长沙</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 12 %}">常州</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 13 %}">东莞</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 14 %}">大连</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 15 %}">佛山</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 16 %}">福州</a></span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>GHIJ</dt>
+                        <dd>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 17 %}">贵阳</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 3 %}">广州</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 18 %}">哈尔滨</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 19 %}">合肥</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 20 %}">海口</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 6 %}">杭州</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 21 %}">惠州</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 22 %}">金华</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 23 %}">济南</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 24 %}">嘉兴</a></span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>KLMN</dt>
+                        <dd>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 25 %}">昆明</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 26 %}">廊坊</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 27 %}">宁波</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 28 %}">南昌</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 8 %}">南京</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 29 %}">南宁</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 30 %}">南通</a></span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>OPQR</dt>
+                        <dd>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 31 %}">青岛</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 32 %}">泉州</a></span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>STUV</dt>
+                        <dd>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 2 %}">上海</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 33 %}">石家庄</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 34 %}">绍兴</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 35 %}">沈阳</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 4 %}">深圳</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 36 %}">苏州</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 37 %}">天津</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 39 %}">太原</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 40 %}">台州</a></span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>WXYZ</dt>
+                        <dd>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 7 %}">武汉</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 41 %}">无锡</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 42 %}">温州</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 43 %}">西安</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 44 %}">厦门</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 45 %}">烟台</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 46 %}">珠海</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 48 %}">中山</a></span>
+                            <span><a href="{% url 'app:shailist' 0 0 0 0 49 %}">郑州</a></span>
+                        </dd>
+                    </dl>
+                </dd>
+            </dl>
+
+            <div id="tip_didi" class="dn">
+                <span>亲，“嘀嘀打车”已更名为“滴滴打车”了哦，我们已帮您自动跳转~</span>
+                <a href="javascript:;">我知道了</a>
+            </div>
+
+            <ul class="hot_pos reset">
+            {% for i in informations %}
+                {% for pp in poaa %}
+                {% if i.type.s_pid == pp.s_pid%}
+                <li class="odd clearfix">
+                    <div class="hot_pos_l">
+                        <div class="mb10">
+                            <a href="h/jobs/86989.html" title="" target="_blank">{{ i.i_name }}</a>
+                            &nbsp;
+                            <span class="c9">
+                                {% if i.areashai == 0 %}
+                                    [{{ '全国' }}]
+                                {% elif i.areashai == 1 %}
+                                    [{{ '北京' }}]
+                                {% elif i.areashai == 2 %}
+                                    [{{ '上海' }}]
+                                {% elif i.areashai == 3 %}
+                                    [{{ '广州' }}]
+                                {% elif i.areashai == 4 %}
+                                    [{{ '深圳' }}]
+                                {% elif i.areashai == 5 %}
+                                    [{{ '成都' }}]
+                                {% elif i.areashai == 6 %}
+                                    [{{ '杭州' }}]
+                                {% elif i.areashai == 7 %}
+                                    [{{ '武汉' }}]
+                                {% elif i.areashai == 8 %}
+                                    [{{ '南京' }}]
+                                {% elif i.areashai == 9 %}
+                                    [{{ '长春' }}]
+                                {% elif i.areashai == 10 %}
+                                    [{{ '重庆' }}]
+                                {% elif i.areashai == 11 %}
+                                    [{{ '长沙' }}
+                                {% elif i.areashai == 12 %}
+                                    [{{ '常州' }}]
+                                {% elif i.areashai == 13 %}
+                                    [{{ '东莞' }}]
+                                {% elif i.areashai == 14 %}
+                                    [{{ '大连' }}]
+                                {% elif i.areashai == 15 %}
+                                    [{{ '佛山' }}]
+                                {% elif i.areashai == 16 %}
+                                    [{{ '福州' }}]
+                                {% elif i.areashai == 17 %}
+                                    [{{ '贵阳' }}]
+                                {% elif i.areashai == 18 %}
+                                    [{{ '哈尔滨' }}]
+                                {% elif i.areashai == 19 %}
+                                    [{{ '合肥' }}]
+                                {% elif i.areashai == 20 %}
+                                    [{{ '海口' }}]
+                                {% elif i.areashai == 21 %}
+                                    [{{ '惠州' }}]
+                                {% elif i.areashai == 22 %}
+                                    [{{ '金华' }}]
+                                {% elif i.areashai == 23 %}
+                                    [{{ '济南' }}]
+                                {% elif i.areashai == 24 %}
+                                    [{{ '嘉兴' }}]
+                                {% elif i.areashai == 25 %}
+                                    [{{ '昆明' }}]
+                                {% elif i.areashai == 26 %}
+                                    [{{ '廊坊' }}]
+                                {% elif i.areashai == 27 %}
+                                    [{{ '宁波' }}]
+                                {% elif i.areashai == 28 %}
+                                    [{{ '南昌' }}]
+                                {% elif i.areashai == 29 %}
+                                    [{{ '南宁' }}]
+                                {% elif i.areashai == 30 %}
+                                    [{{ '南通' }}]
+                                {% elif i.areashai == 31 %}
+                                    [{{ '青岛' }}]
+                                {% elif i.areashai == 32 %}
+                                    [{{ '泉州' }}]
+                                {% elif i.areashai == 33 %}
+                                    [{{ '石家庄' }}]
+                                {% elif i.areashai == 34 %}
+                                    [{{ '绍兴' }}]
+                                {% elif i.areashai == 35 %}
+                                    [{{ '沈阳' }}]
+                                {% elif i.areashai == 36 %}
+                                    [{{ '苏州' }}]
+                                {% elif i.areashai == 37 %}
+                                    [{{ '天津' }}]
+                                {% elif i.areashai == 38 %}
+                                    [{{ '' }}]
+                                {% elif i.areashai == 39 %}
+                                    [{{ '太原' }}]
+                                {% elif i.areashai == 40 %}
+                                    [{{ '台州' }}]
+                                {% elif i.areashai == 41 %}
+                                    [{{ '无锡' }}]
+                                {% elif i.areashai == 42 %}
+                                    [{{ '温州' }}]
+                                {% elif i.areashai == 43 %}
+                                    [{{ '西安' }}]
+                                {% elif i.areashai == 44 %}
+                                    [{{ '厦门' }}]
+                                {% elif i.areashai == 45 %}
+                                    [{{ '烟台' }}]
+                                {% elif i.areashai == 46 %}
+                                    [{{ '珠海' }}]
+                                {% elif i.areashai == 47 %}
+                                    [{{ '' }}]
+                                {% elif i.areashai == 48 %}
+                                    [{{ '中山' }}]
+                                {% else %}
+                                    [{{ '郑州' }}]
+                                {% endif %}
+                            </span>
+                        </div>
+                        <span><em class="c7">月薪：</em>
+                            {% if i.payshai == 0 %}
+                                {{ '2k以下' }}
+                            {% elif i.payshai == 1 %}
+                                {{ '2k-5k' }}
+                            {% elif i.payshai == 2 %}
+                                {{ '5k-10k' }}
+                            {% elif i.payshai == 3 %}
+                                {{ '10k-15k' }}
+                            {% elif i.payshai == 4 %}
+                                {{ '15k-25k' }}
+                            {% elif i.payshai == 5 %}
+                                {{ '25k-50k' }}
+                            {% else %}
+                                {{ '50k以上' }}
+                            {% endif %}
+                        </span>
+                        <span><em class="c7">经验：</em>
+                            {% if i.expshai == 0 %}
+                                {{ '不限' }}
+                            {% elif i.expshai == 1 %}
+                                {{ '应届毕业生' }}
+                            {% elif i.expshai == 2 %}
+                                {{ '1年以下' }}
+                            {% elif i.expshai == 3 %}
+                                {{ '1-3年' }}
+                            {% elif i.expshai == 4 %}
+                                {{ '3-5年' }}
+                            {% elif i.expshai == 5 %}
+                                {{ '5-10年' }}
+                            {% else  %}
+                                {{ '10年以上' }}
+                            {% endif %}
+                        </span>
+                        <span><em class="c7">最低学历： </em>
+                            {% if i.degreeshai == 0 %}
+                                {{ '不限' }}
+                            {% elif i.degreeshai == 1 %}
+                                {{ '大专' }}
+                            {% elif i.degreeshai == 2 %}
+                                {{ '本科' }}
+                            {% elif i.degreeshai == 3 %}
+                                {{ '硕士' }}
+                            {% else %}
+                                {{ '博士' }}
+                            {% endif %}
+                        </span>
+                        <br/>
+                        <span><em class="c7">职位诱惑：</em>{{ i.i_wealth }}</span>
+                        <br/>
+                        <span>{{ i.posttime }}发布</span>
+                    </div>
+                    {% for c in companies %}
+                         {% if c.c_id == i.company.c_id  %}
+                    <div class="hot_pos_r">
+                        <div class="apply">
+                            <a href="toudi.html" target="_blank">投个简历</a>
+                        </div>
+                        <div class="mb10"><a href="h/c/1712.html" title="{{ c.c_name }}" target="_blank">{{ c.c_name }}</a></div>
+                        <span><em class="c7">领域： </em>{{ c.area }}</span>
+                        <span><em class="c7">创始人：</em> {{ c.founder.f_name }}</span>
+                        <br/>
+                        <span><em class="c7">阶段： </em>{% if c.develop == '0' %}
+                                            {{ '未融资' }}
+                                        {% elif c.develop == '1' %}
+                                            {{ '天使轮' }}
+                                        {% elif c.develop == '2' %}
+                                            {{ 'Pre_A轮' }}
+                                        {% elif c.develop == '3' %}
+                                            {{ 'A轮' }}
+                                        {% elif c.develop == '4' %}
+                                            {{ 'B轮' }}
+                                        {% elif c.develop == '5' %}
+                                            {{ 'C轮' }}
+                                        {% elif c.develop == '6' %}
+                                            {{ 'D轮及以上' }}
+                                        {% else %}
+                                            {{ '已上市' }}
+                                        {% endif %}</span>
+                        <span><em class="c7">规模： </em>{% if c.size == 0 %}
+                                            {{ '无' }}
+                                        {% elif c.size == 1 %}
+                                            {{ '10人以下' }}
+                                        {% elif c.size == 2 %}
+                                            {{ '10-50人' }}
+                                        {% elif c.size == 3 %}
+                                            {{ '50-100人' }}
+                                        {% else %}
+                                            {{ '100人以上' }}
+                                        {% endif %}</span>
+                        <ul class="companyTags reset">
+                            {% for t in tags %}
+                                  {% if t.c_id.c_id == c.c_id %}
+                                  <li>{{ t.t_name }}</li>
+                                 {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                 {% endfor %}
+                </li>
+                    {% endif %}
+                 {% endfor %}
+            {% endfor %}
+            </ul>
+            <div class="Pagination"></div>
+        </div>
+
+        <script>
+            $(function () {
+                /***************************
+                 * 分页
+                 */
+                $('.Pagination').pager({
+                    currPage: 1,
+                    pageNOName: "pn",
+                    form: "searchForm",
+                    pageCount: 30,
+                    pageSize: 5
+                });
+
+                $(".workplace dd").not('.more').children('a').click(function () {
+                    $('#lc').val(1);
+                    editForm("cityInput", $(this).html());
+                });
+
+                $("#box_expectCity dd span").click(function () {
+                    $('#lc').val(1);
+                    editForm("cityInput", $(this).html());
+                });
+
+                $('#options dd div').click(function () {
+                    var firstName = $(this).parents('dl').children('dt').text();
+                    var fn = $.trim(firstName);
+                    if (fn == "月薪范围") {
+                        editForm("yxInput", $(this).html());
+                    } else if (fn == "工作经验") {
+                        editForm("gjInput", $(this).html());
+                    } else if (fn == "最低学历") {
+                        editForm("xlInput", $(this).html());
+                    } else if (fn == "工作性质") {
+                        editForm("gxInput", $(this).html());
+                    } else if (fn == "发布时间") {
+                        editForm("stInput", $(this).html());
+                    }
+                });
+
+                $('#selected ul').delegate('li span.select_remove', 'click', function (event) {
+                    var firstName = $(this).parent('li').find('strong').text();
+                    var fn = $.trim(firstName);
+                    if (fn == "月薪范围")
+                        editForm("yxInput", "");
+                    else if (fn == "工作经验")
+                        editForm("gjInput", "");
+                    else if (fn == "最低学历")
+                        editForm("xlInput", "");
+                    else if (fn == "工作性质")
+                        editForm("gxInput", "");
+                    else if (fn == "发布时间")
+                        editForm("stInput", "");
+                });
+
+                /* search结果飘绿	*/
+                (function ($) {
+                    var searchVal = $('#search_input').val();
+                    var reg = /\s/g;
+                    searchVal = searchVal.replace(reg, "").split("");
+
+                    var resultL = '';
+                    var resultR = '';
+                    $('.hot_pos li').each(function () {
+                        resultL = $('.hot_pos_l a', this).text().split("");
+                        $.each(resultL, function (i, v) {
+                            if ($.inArray(v.toLowerCase(), searchVal) != -1 || $.inArray(v.toUpperCase(), searchVal) != -1) {
+                                resultL[i] = '<span>' + v + '</span>';
+                            }
+                        });
+                        $('.hot_pos_l a', this).html(resultL.join(''));
+
+                        resultR = $('.hot_pos_r .mb10 a', this).text().split("");
+                        $.each(resultR, function (i, v) {
+                            if ($.inArray(v.toLowerCase(), searchVal) != -1 || $.inArray(v.toUpperCase(), searchVal) != -1) {
+                                resultR[i] = '<span>' + v + '</span>';
+                            }
+                        });
+                        $('.hot_pos_r .mb10 a', this).html(resultR.join(''));
+                    });
+
+                })(jQuery);
+
+                //didi tip
+                if ($.cookie('didiTip') != 1 && false) {
+                    $('#tip_didi').show();
+                }
+                $('#tip_didi a').click(function () {
+                    $(this).parent().remove();
+                    $.cookie('didiTip', 1, {expires: 30, path: '/'});
+                });
+
+            });
+
+            {#function editForm(inputId, inputValue) {#}
+            {#    $("#" + inputId).val(inputValue);#}
+            {#    var keyword = $.trim($('#search_input').val());#}
+            {#    var reg = /[`~!@\$%\^\&\*\(\)_<>\?:"\{\},\\\/;'\[\]]/ig;#}
+            {#    var re = /#/g;#}
+            {#    var r = /\./g;#}
+            {#    var kw = keyword.replace(reg, " ");#}
+            {##}
+            {#    if (kw == '') {#}
+            {#        $('#searchForm').attr('action', 'list.html所有职位').submit();#}
+            {#    } else {#}
+            {#        kw = kw.replace(re, '井');#}
+            {#        kw = kw.replace(r, '。');#}
+            {#        $('#searchForm').attr('action', 'list.html' + kw).submit();#}
+            {#    }#}
+            {#    //$("#searchForm").submit();#}
+            {#}#}
+        </script>
+
+        <div class="clear"></div>
+        <input type="hidden" id="resubmitToken" value=""/>
+        <a id="backtop" title="回到顶部" rel="nofollow"></a>
+    </div><!-- end #container -->
+    </div><!-- end #body -->
+{% endblock middle %}

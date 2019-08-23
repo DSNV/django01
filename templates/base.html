@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block  link_top %}
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+    <title>拉勾网-最专业的互联网招聘平台</title>
+    <!-- <div class="web_root"  style="display:none">h</div> -->
+{#    <script type="text/javascript">#}
+{#        var ctx = "h";#}
+{#        console.log(1);#}
+{#    </script>#}
+{#    <link rel="stylesheet" type="text/css" href="/Lagou/css/style.css"/>#}
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/external.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/popup.css"/>
+    <script src="/static/js/jquery.1.10.1.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/static/js/jquery.lib.min.js"></script>
+    <script src="/static/js/ajaxfileupload.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/static/js/additional-methods.js"></script>
+    <script type="text/javascript" src="/static/js/conv.js"></script>
+    <script src="/static/js/conv.js" type="text/javascript"></script>
+    <script src="/static/js/ajaxCross.json" charset="UTF-8"></script>
+{#    <script src="/static/js/jquery-3.4.1.min.js"></script>#}
+    {% endblock link_top %}
+    <!--[if lte IE 8]>
+<![endif]-->
+{#    <script type="text/javascript">#}
+{#        var youdao_conv_id = 271546;#}
+{#    </script>#}
+
+
+
+</head>
+<body>
+<div id="body">
+
+
+    {% block header_top %}
+    {% if 'email' in request.session %}
+    <div id="header">
+            <div class="wrapper">
+                <a class="logo" href="{% url 'app:index' %}">
+                    <img width="229" height="43" alt="拉勾招聘-专注互联网招聘" src="/static/images/logo.png">
+                </a>
+                <ul id="navheader" class="reset">
+                    <li class="current"><a href="{% url 'app:index' %}">首页</a></li>
+                    {% if request.session.identity == 0 %}
+                    <li><a rel="nofollow" href="{% url 'app:jianli'  %}">我的简历</a></li>
+                    {% else %}
+                    <li><a target="_blank" href="{% url 'app:comfirst' %}">发布职位</a></li>
+                    {% endif %}
+                </ul>
+                <dl class="collapsible_menu">
+                    <dt>
+                        <span>{{ request.session.email }}&nbsp;</span>
+                        <span class="red dn" id="noticeDot-0"></span>
+                        <i></i>
+                    </dt>
+                    {% if identity == 0 %}
+                    <dd><a rel="nofollow" href="jianli.html">我的简历</a></dd>
+                    <dd><a href="collections.html">我收藏的职位</a></dd>
+                    <dd class="btm"><a href="subscribe.html">我的订阅</a></dd>
+                    <dd><a href="accountBind.html">帐号设置</a></dd>
+                    <dd class="logout"><a rel="nofollow" href="{% url 'app:logout' %}">退出</a>
+                    </dd>
+                    {% else %}
+                    <dd><a href="{% url 'app:createnewjob' %}">我要招人</a></dd>
+                    <dd><a href="accountBind.html">帐号设置</a></dd>
+                    <dd class="logout"><a rel="nofollow" href="{% url 'app:logout' %}">退出</a>
+                    </dd>
+                </dl>
+                <div class="dn" id="noticeTip">
+                    <span class="bot"></span>
+                    <span class="top"></span>
+                    <a target="_blank" href="delivery.html"><strong>0</strong>条新投递反馈</a>
+                    <a class="closeNT" href="javascript:;"></a>
+                </div>
+            </div>
+        </div>
+{% endif %}
+    {% else %}
+    <div id="header">
+        <div class="wrapper">
+            <a href="index.html" class="logo">
+                <img src="/static/images/logo.png" width="229" height="43" alt="拉勾招聘-专注互联网招聘"/>
+            </a>
+            <ul class="reset" id="navheader">
+                <li class="current"><a href="{% url 'app:index' %}">首页</a></li>
+                <li><a href="{% url 'app:login' %}" rel="nofollow">我的简历</a></li>
+                <li><a href="{% url 'app:login' %}" rel="nofollow">发布职位</a></li>
+            </ul>
+            <ul class="loginTop">
+                <li><a href="{% url 'app:login' %}" rel="nofollow">登录</a></li>
+                <li>|</li>
+                <li><a href="{% url 'app:register' %}" rel="nofollow">注册</a></li>
+            </ul>
+        </div>
+    </div><!-- end #header -->
+    {% endif %}
+    {% endblock header_top %}
+
+
+{% block middle %}
+    <div id="container">
+        {% block middle_left %}
+        <div id="sidebar">
+            <div class="mainNavs">
+            {% for one in poone %}
+                <div class="menu_box">
+                    <div class="menu_main">
+                        <h2>{{ one.pname }} <span></span></h2>
+                        {% for three in pothreeline %}
+                            {% if one.o_pid == three.threeaid.o_pid %}
+                        <a href="{% url 'app:seeklist' three.s_pid %}">{{ three.pname }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="menu_sub dn">
+                        {% for two in potwo %}
+                            {% if one.o_pid == two.twoid.o_pid %}
+                        <dl class="reset">
+                                <dt>
+                                    {{ two.pname }}
+                                </dt>
+                            <dd>
+                                {% for three in pothree %}
+                                    {% if two.t_pid == three.threeid.t_pid %}
+
+                                <a href="{% url 'app:seeklist' three.s_pid  %}" class="curr">{{ three.pname }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </dd>
+                        </dl>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        {%if 'email' in request.session %}
+            {% if request.session.identity == 0%}
+            <a class="subscribe" href="{% url 'app:subscribe' %}" target="_blank">订阅职位</a>
+            {% endif  %}
+        {% endif %}
+        </div>
+        {% endblock middle_left %}
+        <div class="content">
+            {% block middle_find %}
+            <div id="search_box">
+                <form name="searchForm" action="{% url 'app:list' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <ul id="searchType">
+                        <li data-searchtype="1" class="type_selected">职位</li>
+                    </ul>
+                    <script>
+                        var aa = document.getElementById('searchType')
+                        cc = aa.children[0].innerHTML
+                    </script>
+                    <div class="searchtype_arrow"></div>
+                    <input type="text" id="search_input" name="kd" tabindex="1" value="" placeholder="请输入职位名称，如：产品经理"/>
+                    <input type="submit" id="search_button" value="搜索"/>
+                </form>
+            </div>
+            <style>
+                .ui-autocomplete {
+                    width: 488px;
+                    background: #fafafa !important;
+                    position: relative;
+                    z-index: 10;
+                    border: 2px solid #91cebe;
+                }
+
+                .ui-autocomplete-category {
+                    font-size: 16px;
+                    color: #999;
+                    width: 50px;
+                    position: absolute;
+                    z-index: 11;
+                    right: 0px; /*top: 6px; */
+                    text-align: center;
+                    border-top: 1px dashed #e5e5e5;
+                    padding: 5px 0;
+                }
+
+                .ui-menu-item {
+                    *width: 439px;
+                    vertical-align: middle;
+                    position: relative;
+                    margin: 0px;
+                    margin-right: 50px !important;
+                    background: #fff;
+                    border-right: 1px dashed #ededed;
+                }
+
+                .ui-menu-item a {
+                    display: block;
+                    overflow: hidden;
+                }
+            </style>
+            <script type="text/javascript" src="/static/js/search.min.js"></script>
+            <dl class="hotSearch">
+                <dt>热门搜索：</dt>
+                {% for three in pothreehot %}
+                <dd><a href="{% url 'app:list' %}">{{ three.pname }}</a></dd>
+                {% endfor %}
+            </dl>
+            <div id="home_banner">
+                <ul class="banner_bg">
+                    <li class="banner_bg_1 current">
+                        <a href="h/subject/s_buyfundation.html?utm_source=DH__lagou&utm_medium=banner&utm_campaign=haomai"
+                           target="_blank"><img src="/static/images/d05a2cc6e6c94bdd80e074eb05e37ebd.jpg" width="612"
+                                                height="160" alt="好买基金——来了就给100万"/></a>
+                    </li>
+                    <li class="banner_bg_2">
+                        <a href="h/subject/s_worldcup.html?utm_source=DH__lagou&utm_medium=home&utm_campaign=wc"
+                           target="_blank"><img src="/static/images/c9d8a0756d1442caa328adcf28a38857.jpg" width="612"
+                                                height="160" alt="世界杯放假看球，老板我也要！"/></a>
+                    </li>
+                    <li class="banner_bg_3">
+                        <a href="h/subject/s_xiamen.html?utm_source=DH__lagou&utm_medium=home&utm_campaign=xiamen"
+                           target="_blank"><img src="/static/images/d03110162390422bb97cebc7fd2ab586.jpg" width="612"
+                                                height="160" alt="出北京记——第一站厦门"/></a>
+                    </li>
+                </ul>
+                <div class="banner_control">
+                    <em></em>
+                    <ul class="thumbs">
+                        <li class="thumbs_1 current">
+                            <i></i>
+                            <img src="/static/images/4469b1b83b1f46c7adec255c4b1e4802.jpg" width="113" height="42"/>
+                        </li>
+                        <li class="thumbs_2">
+                            <i></i>
+                            <img src="/static/images/381b343557774270a508206b3a725f39.jpg" width="113" height="42"/>
+                        </li>
+                        <li class="thumbs_3">
+                            <i></i>
+                            <img src="/static/images/354d445c5fd84f1990b91eb559677eb5.jpg" width="113" height="42"/>
+                        </li>
+                    </ul>
+                </div>
+            </div><!--/#main_banner-->
+            <ul id="da-thumbs" class="da-thumbs">
+                <li>
+                    <a href="h/c/1650.html" target="_blank">
+                        <img src="/static/images/a254b11ecead45bda166afa8aaa9c8bc.jpg" width="113" height="113" alt="联想"/>
+                        <div class="hot_info">
+                            <h2 title="联想">联想</h2>
+                            <em></em>
+                            <p title="世界因联想更美好">
+                                世界因联想更美好
+                            </p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="h/c/9725.html" target="_blank">
+                        <img src="/static/images/c75654bc2ab141df8218983cfe5c89f9.jpg" width="113" height="113" alt="淘米"/>
+                        <div class="hot_info">
+                            <h2 title="淘米">淘米</h2>
+                            <em></em>
+                            <p title="将心注入 追求极致">
+                                将心注入 追求极致
+                            </p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="h/c/1914.html" target="_blank">
+                        <img src="/static/images/2bba2b71d0b0443eaea1774f7ee17c9f.png" width="113" height="113"
+                             alt="优酷土豆"/>
+                        <div class="hot_info">
+                            <h2 title="优酷土豆">优酷土豆</h2>
+                            <em></em>
+                            <p title="专注于视频领域，是中国网络视频行业领军企业">
+                                专注于视频领域，是中国网络视频行业领军企业
+                            </p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="h/c/6630.html" target="_blank">
+                        <img src="/static/images/f4822a445a8b495ebad81fcfad3e40e2.jpg" width="113" height="113"
+                             alt="思特沃克"/>
+                        <div class="hot_info">
+                            <h2 title="思特沃克">思特沃克</h2>
+                            <em></em>
+                            <p title="一家全球信息技术服务公司">
+                                一家全球信息技术服务公司
+                            </p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="h/c/2700.html" target="_blank">
+                        <img src="/static/images/5caf8f9631114bf990f87bb11360653e.png" width="113" height="113" alt="奇猫"/>
+                        <div class="hot_info">
+                            <h2 title="奇猫">奇猫</h2>
+                            <em></em>
+                            <p title="专注于移动互联网、互联网产品研发">
+                                专注于移动互联网、互联网产品研发
+                            </p>
+                        </div>
+                    </a>
+                </li>
+                <li class="last">
+                    <a href="h/c/1335.html" target="_blank">
+                        <img src="/static/images/c0052c69ef4546c3b7d08366d0744974.jpg" width="113" height="113"
+                             alt="堆糖网"/>
+                        <div class="hot_info">
+                            <h2 title="堆糖网">堆糖网</h2>
+                            <em></em>
+                            <p title="分享收集生活中的美好，遇见世界上的另外一个你">
+                                分享收集生活中的美好，遇见世界上的另外一个你
+                            </p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            {% endblock middle_find %}
+            {% block middle_foot_top %}
+            <ul class="reset hotabbing">
+                <li class="current">全部职位</li>
+                <li>最新职位</li>
+            </ul>
+            {% endblock middle_foot_top %}
+            <div id="hotList">
+                {% block middle_hot %}
+                <ul class="hot_pos reset">
+                {% for i in informations %}
+                    <li class="odd clearfix">
+                        <div class="hot_pos_l">
+                            <div class="mb10">
+                                <a href="h/jobs/147974.html" target="_blank">{{ i.i_name }}</a>
+                                &nbsp;
+                                <span class="c9">
+                                    {% if i.areashai == 0 %}
+                                    [{{ '全国' }}]
+                                {% elif i.areashai == 1 %}
+                                    [{{ '北京' }}]
+                                {% elif i.areashai == 2 %}
+                                    [{{ '上海' }}]
+                                {% elif i.areashai == 3 %}
+                                    [{{ '广州' }}]
+                                {% elif i.areashai == 4 %}
+                                    [{{ '深圳' }}]
+                                {% elif i.areashai == 5 %}
+                                    [{{ '成都' }}]
+                                {% elif i.areashai == 6 %}
+                                    [{{ '杭州' }}]
+                                {% elif i.areashai == 7 %}
+                                    [{{ '武汉' }}]
+                                {% elif i.areashai == 8 %}
+                                    [{{ '南京' }}]
+                                {% elif i.areashai == 9 %}
+                                    [{{ '长春' }}]
+                                {% elif i.areashai == 10 %}
+                                    [{{ '重庆' }}]
+                                {% elif i.areashai == 11 %}
+                                    [{{ '长沙' }}
+                                {% elif i.areashai == 12 %}
+                                    [{{ '常州' }}]
+                                {% elif i.areashai == 13 %}
+                                    [{{ '东莞' }}]
+                                {% elif i.areashai == 14 %}
+                                    [{{ '大连' }}]
+                                {% elif i.areashai == 15 %}
+                                    [{{ '佛山' }}]
+                                {% elif i.areashai == 16 %}
+                                    [{{ '福州' }}]
+                                {% elif i.areashai == 17 %}
+                                    [{{ '贵阳' }}]
+                                {% elif i.areashai == 18 %}
+                                    [{{ '哈尔滨' }}]
+                                {% elif i.areashai == 19 %}
+                                    [{{ '合肥' }}]
+                                {% elif i.areashai == 20 %}
+                                    [{{ '海口' }}]
+                                {% elif i.areashai == 21 %}
+                                    [{{ '惠州' }}]
+                                {% elif i.areashai == 22 %}
+                                    [{{ '金华' }}]
+                                {% elif i.areashai == 23 %}
+                                    [{{ '济南' }}]
+                                {% elif i.areashai == 24 %}
+                                    [{{ '嘉兴' }}]
+                                {% elif i.areashai == 25 %}
+                                    [{{ '昆明' }}]
+                                {% elif i.areashai == 26 %}
+                                    [{{ '廊坊' }}]
+                                {% elif i.areashai == 27 %}
+                                    [{{ '宁波' }}]
+                                {% elif i.areashai == 28 %}
+                                    [{{ '南昌' }}]
+                                {% elif i.areashai == 29 %}
+                                    [{{ '南宁' }}]
+                                {% elif i.areashai == 30 %}
+                                    [{{ '南通' }}]
+                                {% elif i.areashai == 31 %}
+                                    [{{ '青岛' }}]
+                                {% elif i.areashai == 32 %}
+                                    [{{ '泉州' }}]
+                                {% elif i.areashai == 33 %}
+                                    [{{ '石家庄' }}]
+                                {% elif i.areashai == 34 %}
+                                    [{{ '绍兴' }}]
+                                {% elif i.areashai == 35 %}
+                                    [{{ '沈阳' }}]
+                                {% elif i.areashai == 36 %}
+                                    [{{ '苏州' }}]
+                                {% elif i.areashai == 37 %}
+                                    [{{ '天津' }}]
+                                {% elif i.areashai == 38 %}
+                                    [{{ '' }}]
+                                {% elif i.areashai == 39 %}
+                                    [{{ '太原' }}]
+                                {% elif i.areashai == 40 %}
+                                    [{{ '台州' }}]
+                                {% elif i.areashai == 41 %}
+                                    [{{ '无锡' }}]
+                                {% elif i.areashai == 42 %}
+                                    [{{ '温州' }}]
+                                {% elif i.areashai == 43 %}
+                                    [{{ '西安' }}]
+                                {% elif i.areashai == 44 %}
+                                    [{{ '厦门' }}]
+                                {% elif i.areashai == 45 %}
+                                    [{{ '烟台' }}]
+                                {% elif i.areashai == 46 %}
+                                    [{{ '珠海' }}]
+                                {% elif i.areashai == 47 %}
+                                    [{{ '' }}]
+                                {% elif i.areashai == 48 %}
+                                    [{{ '中山' }}]
+                                {% else %}
+                                    [{{ '郑州' }}]
+                                {% endif %}
+                                </span>
+                            </div>
+                            <span><em class="c7">月薪： </em>
+                                {% if i.payshai == 0 %}
+                                {{ '2k以下' }}
+                            {% elif i.payshai == 1 %}
+                                {{ '2k-5k' }}
+                            {% elif i.payshai == 2 %}
+                                {{ '5k-10k' }}
+                            {% elif i.payshai == 3 %}
+                                {{ '10k-15k' }}
+                            {% elif i.payshai == 4 %}
+                                {{ '15k-25k' }}
+                            {% elif i.payshai == 5 %}
+                                {{ '25k-50k' }}
+                            {% else %}
+                                {{ '50k以上' }}
+                            {% endif %}
+                            </span>
+                            <span><em class="c7">经验：</em>
+                                {% if i.expshai == 0 %}
+                                {{ '不限' }}
+                            {% elif i.expshai == 1 %}
+                                {{ '应届毕业生' }}
+                            {% elif i.expshai == 2 %}
+                                {{ '1年以下' }}
+                            {% elif i.expshai == 3 %}
+                                {{ '1-3年' }}
+                            {% elif i.expshai == 4 %}
+                                {{ '3-5年' }}
+                            {% elif i.expshai == 5 %}
+                                {{ '5-10年' }}
+                            {% else  %}
+                                {{ '10年以上' }}
+                            {% endif %}
+                            </span>
+                            <span><em class="c7">最低学历： </em>
+                                {% if i.degreeshai == 0 %}
+                                {{ '不限' }}
+                            {% elif i.degreeshai == 1 %}
+                                {{ '大专' }}
+                            {% elif i.degreeshai == 2 %}
+                                {{ '本科' }}
+                            {% elif i.degreeshai == 3 %}
+                                {{ '硕士' }}
+                            {% else %}
+                                {{ '博士' }}
+                            {% endif %}
+                            </span>
+                            <br/>
+                            <span><em class="c7">职位诱惑：</em>{{ i.i_wealth }}</span>
+                            <br/>
+                            <span>{{ i.posttime }}发布</span>
+                            <!-- <a  class="wb">分享到微博</a> -->
+                        </div>
+                        {% for c in companies %}
+                            {% if c.c_id == i.company.c_id  %}
+                            <div class="hot_pos_r">
+                                    <div class="mb10 recompany"><a href="h/c/5232.html"
+                                                                   target="_blank">{{ c.c_name }}</a></div>
+                                    <span><em class="c7">
+                                领域：
+                            </em>
+                                {{ c.area }}
+                            </span>
+                                    <span><em class="c7">
+                                创始人：{{ c.founder.f_name }}
+                            </em>
+{#                                {{ c.f_name }}#}
+                            </span>
+                                    <br/>
+                                    <span><em class="c7">
+                                阶段：
+                            </em>
+                                        {% if c.develop == '0' %}
+                                            {{ '未融资' }}
+                                        {% elif c.develop == '1' %}
+                                            {{ '天使轮' }}
+                                        {% elif c.develop == '2' %}
+                                            {{ 'Pre_A轮' }}
+                                        {% elif c.develop == '3' %}
+                                            {{ 'A轮' }}
+                                        {% elif c.develop == '4' %}
+                                            {{ 'B轮' }}
+                                        {% elif c.develop == '5' %}
+                                            {{ 'C轮' }}
+                                        {% elif c.develop == '6' %}
+                                            {{ 'D轮及以上' }}
+                                        {% else %}
+                                            {{ '已上市' }}
+                                        {% endif %}
+                            </span>
+                                    <span><em class="c7">
+                                规模：
+                            </em>
+                                        {% if c.size == 0 %}
+                                            {{ '无' }}
+                                        {% elif c.size == 1 %}
+                                            {{ '10人以下' }}
+                                        {% elif c.size == 2 %}
+                                            {{ '10-50人' }}
+                                        {% elif c.size == 3 %}
+                                            {{ '50-100人' }}
+                                        {% else %}
+                                            {{ '100人以上' }}
+                                        {% endif %}
+                            </span>
+                                    <ul class="companyTags reset">
+                                        {% for t in tags %}
+                                            {% if t.c_id.c_id == c.c_id %}
+                                            <li>{{ t.t_name }}</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </li>
+                    {% endfor %}
+                    <a href="{% url 'app:list' %}" class="btn fr" target="_blank">查看更多</a>
+                </ul>
+                {% endblock middle_hot %}
+                {% block middle_new %}
+
+                <ul class="hot_pos hot_posHotPosition reset" style="display:none;">
+                {% for i in informationsnew %}
+                    <li class="clearfix">
+                        <div class="hot_pos_l">
+                            <div class="mb10">
+                                <a href="h/jobs/149389.html" target="_blank">{{ i.i_name }}</a>
+                                &nbsp;
+                                <span class="c9">
+                                    {% if i.areashai == 0 %}
+                                    [{{ '全国' }}]
+                                {% elif i.areashai == 1 %}
+                                    [{{ '北京' }}]
+                                {% elif i.areashai == 2 %}
+                                    [{{ '上海' }}]
+                                {% elif i.areashai == 3 %}
+                                    [{{ '广州' }}]
+                                {% elif i.areashai == 4 %}
+                                    [{{ '深圳' }}]
+                                {% elif i.areashai == 5 %}
+                                    [{{ '成都' }}]
+                                {% elif i.areashai == 6 %}
+                                    [{{ '杭州' }}]
+                                {% elif i.areashai == 7 %}
+                                    [{{ '武汉' }}]
+                                {% elif i.areashai == 8 %}
+                                    [{{ '南京' }}]
+                                {% elif i.areashai == 9 %}
+                                    [{{ '长春' }}]
+                                {% elif i.areashai == 10 %}
+                                    [{{ '重庆' }}]
+                                {% elif i.areashai == 11 %}
+                                    [{{ '长沙' }}
+                                {% elif i.areashai == 12 %}
+                                    [{{ '常州' }}]
+                                {% elif i.areashai == 13 %}
+                                    [{{ '东莞' }}]
+                                {% elif i.areashai == 14 %}
+                                    [{{ '大连' }}]
+                                {% elif i.areashai == 15 %}
+                                    [{{ '佛山' }}]
+                                {% elif i.areashai == 16 %}
+                                    [{{ '福州' }}]
+                                {% elif i.areashai == 17 %}
+                                    [{{ '贵阳' }}]
+                                {% elif i.areashai == 18 %}
+                                    [{{ '哈尔滨' }}]
+                                {% elif i.areashai == 19 %}
+                                    [{{ '合肥' }}]
+                                {% elif i.areashai == 20 %}
+                                    [{{ '海口' }}]
+                                {% elif i.areashai == 21 %}
+                                    [{{ '惠州' }}]
+                                {% elif i.areashai == 22 %}
+                                    [{{ '金华' }}]
+                                {% elif i.areashai == 23 %}
+                                    [{{ '济南' }}]
+                                {% elif i.areashai == 24 %}
+                                    [{{ '嘉兴' }}]
+                                {% elif i.areashai == 25 %}
+                                    [{{ '昆明' }}]
+                                {% elif i.areashai == 26 %}
+                                    [{{ '廊坊' }}]
+                                {% elif i.areashai == 27 %}
+                                    [{{ '宁波' }}]
+                                {% elif i.areashai == 28 %}
+                                    [{{ '南昌' }}]
+                                {% elif i.areashai == 29 %}
+                                    [{{ '南宁' }}]
+                                {% elif i.areashai == 30 %}
+                                    [{{ '南通' }}]
+                                {% elif i.areashai == 31 %}
+                                    [{{ '青岛' }}]
+                                {% elif i.areashai == 32 %}
+                                    [{{ '泉州' }}]
+                                {% elif i.areashai == 33 %}
+                                    [{{ '石家庄' }}]
+                                {% elif i.areashai == 34 %}
+                                    [{{ '绍兴' }}]
+                                {% elif i.areashai == 35 %}
+                                    [{{ '沈阳' }}]
+                                {% elif i.areashai == 36 %}
+                                    [{{ '苏州' }}]
+                                {% elif i.areashai == 37 %}
+                                    [{{ '天津' }}]
+                                {% elif i.areashai == 38 %}
+                                    [{{ '' }}]
+                                {% elif i.areashai == 39 %}
+                                    [{{ '太原' }}]
+                                {% elif i.areashai == 40 %}
+                                    [{{ '台州' }}]
+                                {% elif i.areashai == 41 %}
+                                    [{{ '无锡' }}]
+                                {% elif i.areashai == 42 %}
+                                    [{{ '温州' }}]
+                                {% elif i.areashai == 43 %}
+                                    [{{ '西安' }}]
+                                {% elif i.areashai == 44 %}
+                                    [{{ '厦门' }}]
+                                {% elif i.areashai == 45 %}
+                                    [{{ '烟台' }}]
+                                {% elif i.areashai == 46 %}
+                                    [{{ '珠海' }}]
+                                {% elif i.areashai == 47 %}
+                                    [{{ '' }}]
+                                {% elif i.areashai == 48 %}
+                                    [{{ '中山' }}]
+                                {% else %}
+                                    [{{ '郑州' }}]
+                                {% endif %}
+                                </span>
+                            </div>
+                            <span><em class="c7">月薪： </em>
+                                {% if i.payshai == 0 %}
+                                {{ '2k以下' }}
+                            {% elif i.payshai == 1 %}
+                                {{ '2k-5k' }}
+                            {% elif i.payshai == 2 %}
+                                {{ '5k-10k' }}
+                            {% elif i.payshai == 3 %}
+                                {{ '10k-15k' }}
+                            {% elif i.payshai == 4 %}
+                                {{ '15k-25k' }}
+                            {% elif i.payshai == 5 %}
+                                {{ '25k-50k' }}
+                            {% else %}
+                                {{ '50k以上' }}
+                            {% endif %}
+                            </span>
+                            <span><em class="c7">经验：</em>
+                                {% if i.expshai == 0 %}
+                                {{ '不限' }}
+                            {% elif i.expshai == 1 %}
+                                {{ '应届毕业生' }}
+                            {% elif i.expshai == 2 %}
+                                {{ '1年以下' }}
+                            {% elif i.expshai == 3 %}
+                                {{ '1-3年' }}
+                            {% elif i.expshai == 4 %}
+                                {{ '3-5年' }}
+                            {% elif i.expshai == 5 %}
+                                {{ '5-10年' }}
+                            {% else  %}
+                                {{ '10年以上' }}
+                            {% endif %}
+                            </span>
+                            <span><em class="c7">最低学历：</em>
+                                {% if i.degreeshai == 0 %}
+                                {{ '不限' }}
+                            {% elif i.degreeshai == 1 %}
+                                {{ '大专' }}
+                            {% elif i.degreeshai == 2 %}
+                                {{ '本科' }}
+                            {% elif i.degreeshai == 3 %}
+                                {{ '硕士' }}
+                            {% else %}
+                                {{ '博士' }}
+                            {% endif %}
+                            </span>
+                            <br/>
+                            <span><em class="c7">职位诱惑：</em>{{ i.i_wealth }}</span>
+                            <br/>
+                            <span>{{ i.posttime }}发布</span>
+                            <!-- <a  class="wb">分享到微博</a> -->
+                        </div>
+                        {% for c in companies %}
+                            {% if c.c_id == i.company.c_id  %}
+                        <div class="hot_pos_r">
+                            <div class="mb10"><a href="h/c/8250.html" target="_blank">{{ c.c_name }}</a></div>
+                            <span><em class="c7">领域：</em> {{ c.area }}</span>
+                            <span><em class="c7">创始人：</em>{{ c.founder.f_name }}</span>
+                            <br/>
+                            <span> <em class="c7">阶段： </em>
+                                {% if c.develop == '0' %}
+                                            {{ '未融资' }}
+                                        {% elif c.develop == '1' %}
+                                            {{ '天使轮' }}
+                                        {% elif c.develop == '2' %}
+                                            {{ 'Pre_A轮' }}
+                                        {% elif c.develop == '3' %}
+                                            {{ 'A轮' }}
+                                        {% elif c.develop == '4' %}
+                                            {{ 'B轮' }}
+                                        {% elif c.develop == '5' %}
+                                            {{ 'C轮' }}
+                                        {% elif c.develop == '6' %}
+                                            {{ 'D轮及以上' }}
+                                        {% else %}
+                                            {{ '已上市' }}
+                                        {% endif %}
+                            </span>
+                            <span> <em class="c7">规模：</em>
+                                {% if c.size == '0' %}
+                                            {{ '无' }}
+                                        {% elif c.size == '1' %}
+                                            {{ '10人以下' }}
+                                        {% elif c.size == '2' %}
+                                            {{ '10-50人' }}
+                                        {% elif c.size == '3' %}
+                                            {{ '50-100人' }}
+                                        {% else %}
+                                            {{ '100人以上' }}
+                                        {% endif %}
+                            </span>
+                            <ul class="companyTags reset">
+                                {% for t in tags %}
+                                       {% if t.c_id.c_id == c.c_id %}
+                                       <li>{{ t.t_name }}</li>
+                                       {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                            {% endif %}
+                        {% endfor %}
+                    </li>
+                {% endfor %}
+                    <a href="{% url 'app:list' %}" class="btn fr" target="_blank">查看更多</a>
+                </ul>
+                {% endblock middle_new %}
+            </div>
+            <div class="clear"></div>
+        </div>
+        <input type="hidden" value="" name="userid" id="userid"/>
+        <!-------------------------------------弹窗lightbox  ----------------------------------------->
+        <div style="display:none;">
+            <!-- 登录框 -->
+            <div id="loginPop" class="popup" style="height:240px;">
+                <form id="loginForm">
+                    <input type="text" id="email" name="email" tabindex="1" placeholder="请输入登录邮箱地址"/>
+                    <input type="password" id="password" name="password" tabindex="2" placeholder="请输入密码"/>
+                    <span class="error" style="display:none;" id="beError"></span>
+                    <label class="fl" for="remember"><input type="checkbox" id="remember" value="" checked="checked"
+                                                            name="autoLogin"/> 记住我</label>
+                    <a href="h/reset.html" class="fr">忘记密码？</a>
+                    <input type="submit" id="submitLogin" value="登 &nbsp; &nbsp; 录"/>
+                </form>
+                <div class="login_right">
+                    <div>还没有拉勾帐号？</div>
+                    <a href="register.html" class="registor_now">立即注册</a>
+                    <div class="login_others">使用以下帐号直接登录:</div>
+                    <a href="h/ologin/auth/sina.html" target="_blank" id="icon_wb" class="icon_wb"
+                       title="使用新浪微博帐号登录"></a>
+                    <a href="h/ologin/auth/qq.html" class="icon_qq" id="icon_qq" target="_blank" title="使用腾讯QQ帐号登录"></a>
+                </div>
+            </div><!--/#loginPop-->
+        </div>
+        <!------------------------------------- end ----------------------------------------->
+        <script type="text/javascript" src="/static/js/Chart.min.js"></script>
+        <script type="text/javascript" src="/static/js/home.min.js"></script>
+        <script type="text/javascript" src="/static/js/count.js"></script>
+        <div class="clear"></div>
+        <input type="hidden" id="resubmitToken" value=""/>
+        <a id="backtop" title="回到顶部" rel="nofollow"></a>
+    </div><!-- end #container -->
+</div><!-- end #body -->
+{% endblock middle %}
+{% block footer %}
+<div id="footer">
+    <div class="wrapper">
+        <a href="{% url 'app:about' %}" target="_blank" rel="nofollow">联系我们</a>
+        <a href="h/af/zhaopin.html" target="_blank">互联网公司导航</a>
+        <a href="http://e.weibo.com/lagou720" target="_blank" rel="nofollow">拉勾微博</a>
+        <a class="footer_qr" href="javascript:void(0)" rel="nofollow">拉勾微信<i></i></a>
+        <div class="copyright">&copy;2013-2014 Lagou <a target="_blank"
+                                                        href="http://www.miitbeian.gov.cn/state/outPortal/loginPortal.action">京ICP备14023790号-2</a>
+        </div>
+    </div>
+</div>
+{% endblock footer %}
+<script type="text/javascript" src="/static/js/core.min.js"></script>
+<script type="text/javascript" src="/static/js/popup.min.js"></script>
+<!-- <script src="style/js/wb.js" type="text/javascript" charset="utf-8"></script>
+ -->
+</body>
+</html>

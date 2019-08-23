@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initialscale=1">
+    <!-- 上述3个meta标签*必须*放在最前⾯，任何其他内容都*必须*跟随其后！ -->
+    <title>⽤户列表</title>
+    <!-- Bootstrap -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}"
+          rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="bs-example" data-example-id="bordered-table">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>⽤户名</th>
+                    <th>密码</th>
+                    <th>年龄</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in data %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}
+                        </th>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.password }}</td>
+                        <td>{{ user.age }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-5">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page.has_previous %}
+                        <li>
+                            <a href="{% url 'app:userlist1'
+page.number|add:'-1' %}" aria-label="Previous">
+ <span aria-hidden="true">&laquo;
+</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+ <span href="{% url 'app:userlist1'
+page.number|add:'-1' %}" aria-label="Previous">
+ <span aria-hidden="true">&laquo;
+</span>
+ </span>
+                        </li>
+                    {% endif %}
+                    {% for num in pagerange %}
+                        {% ifequal num page.number %}
+                            <li class="active"><a href="{% url 'app:userlist1' num %}">{{ num }}</a></li>
+                        {% else %}
+                            <li><a href="{% url 'app:userlist1' num %}">{{ num }}</a></li>
+                        {% endifequal %}
+                    {% endfor %}
+                    {% if page.has_next %}
+                        <li>
+                            <a href="{% url 'app:userlist1'page.number|add:'1' %}" aria-label="Next">
+ <span aria-hidden="true">&raquo;
+</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+ <span href="#" aria-label="Next">
+ <span aria-hidden="true">&raquo;
+</span>
+ </span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必
+须放在前边) -->
+<script src="{% static 'bootstrap/js/jquery-1.12.4.min.js' %}">
+</script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单
+个插件。 -->
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}">
+</script>
+</body>
+五、静态资源配置
+什么是静态资源：css、js、images 需要从外部导⼊的资源
+5.1创建static⽂件夹（通常放在根⽬录下）
+5.2需要在settings注册
+5.3在模板中使⽤静态资源
+六、⽂件上传
+获取： 使⽤request.FILES 获取上传⽂件
+6.1表单注意
+表单的enctype的值需要设置为：enctype="multipart/form-data
+表单提交类型为POST
+6.2存储路径
+在settings.py⽂件下添加如下代码
+</html>
